@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'projects.apps.ProjectsConfig',
     'comments.apps.CommentsConfig',
     'donations.apps.DonationsConfig',
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
@@ -56,6 +57,11 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ]
+}
 
 ROOT_URLCONF = 'server.urls'
 
