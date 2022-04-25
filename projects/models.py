@@ -1,3 +1,4 @@
+from email.policy import default
 from django.db import models
 
 
@@ -17,11 +18,16 @@ class Project(models.Model):
 
     def __str__(self):
         return self.title
+    
+    class Meta:
+        ordering = ['-start_date']
+        
 
 class Image(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
-    url = models.CharField(max_length=255)
-    caption = models.CharField(max_length=255)
+    caption = models.CharField(max_length=255, blank=True)
+    image = models.ImageField(upload_to='projects/static/images/', default='projects/static/images/default.jpg')
+
 
     def __str__(self):
-        return self.caption
+        return self.image.url
