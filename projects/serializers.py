@@ -33,7 +33,7 @@ class ProjectSerializer(serializers.ModelSerializer):
 class DetailedProjectSerializer(serializers.ModelSerializer):
     images = serializers.StringRelatedField(many=True, read_only=True,source='image_set')
     comments = serializers.StringRelatedField(many=True, read_only=True,source='comment_set')
-    tags = serializers.StringRelatedField(many=True, read_only=True,source='tag_set')
+    # tags = serializers.StringRelatedField(many=True, read_only=True,source='tag_set')
     class Meta:
         model = Project
         fields = [
