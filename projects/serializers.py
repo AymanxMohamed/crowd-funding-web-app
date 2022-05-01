@@ -28,6 +28,7 @@ class ProjectSerializer(serializers.ModelSerializer):
             'end_date',
             'is_featured',
             'images',
+            'raised',
                   ]
         
 class DetailedProjectSerializer(serializers.ModelSerializer):
