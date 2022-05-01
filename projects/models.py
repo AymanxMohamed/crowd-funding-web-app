@@ -1,7 +1,4 @@
-from email.policy import default
 from django.db import models
-from pkg_resources import require
-
 
 class Project(models.Model):
     title = models.CharField(max_length=255)
@@ -12,8 +9,8 @@ class Project(models.Model):
     end_date = models.DateField()
     is_featured = models.BooleanField(default=False)
     category = models.ForeignKey(to='categories.Category', on_delete=models.CASCADE,default=None, blank=True)
-    user = models.ForeignKey(to='users.User', on_delete=models.CASCADE)
-
+    owner = models.ForeignKey(to='users.User', on_delete=models.CASCADE)
+    
     def __str__(self):
         return self.title
     
