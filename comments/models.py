@@ -1,9 +1,10 @@
 from django.db import models
-
 from projects.models import Project
 from users.models import User
 
 # Create your models here.
+
+
 class Comment(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     content = models.TextField()

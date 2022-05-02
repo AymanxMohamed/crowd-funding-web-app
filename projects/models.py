@@ -1,4 +1,5 @@
 from django.db import models
+from users.models import User
 
 
 class Project(models.Model):
@@ -10,7 +11,7 @@ class Project(models.Model):
     end_date = models.DateField()
     is_featured = models.BooleanField(default=False)
     category = models.ForeignKey(to='categories.Category', on_delete=models.CASCADE, default=None, blank=True)
-    owner = models.ForeignKey(to='users.User', on_delete=models.CASCADE)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.title
