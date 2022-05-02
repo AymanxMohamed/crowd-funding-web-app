@@ -12,6 +12,6 @@ urlpatterns = [
     path('comments/', include('comments.urls')),
     path('donations/', include('donations.urls')),
     path('projects/', include('projects.urls')),
-    # path('tags/', include('tags.urls')),
+    path('tags/', include('tags.urls')),
     path('users/', include('users.urls')),
 ]
