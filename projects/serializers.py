@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from donations.models import Donation
 
 from projects.models import Project, Image
 from donations.serializers import DonationSerializer
@@ -6,6 +7,7 @@ from tags.serializers import TagsSerializer
 from comments.serializers import CommentSerializer
 from categories.serializers import CategorySerializer
 from users.serializers import UserSerializer
+from django.db.models import Sum
 
 
 class ImageSerializer(serializers.ModelSerializer):
@@ -19,6 +21,10 @@ class ImageSerializer(serializers.ModelSerializer):
 class ProjectSerializer(serializers.ModelSerializer):
     images = serializers.StringRelatedField(many=True, read_only=True, source='image_set')
     donations = DonationSerializer(many=True, read_only=True)
+    total_donations = serializers.SerializerMethodField()
+    
+    def get_total_donations(self, obj):
+        return Donation.objects.aggregate(Sum('amount'))['amount__sum']
 
     class Meta:
         model = Project
@@ -27,14 +33,17 @@ class ProjectSerializer(serializers.ModelSerializer):
 
 
 class DetailedProjectSerializer(serializers.ModelSerializer):
-    donation = DonationSerializer(many=True, read_only=True)
+    # donation = DonationSerializer(many=True, read_only=True)
     tags = TagsSerializer(many=True)
     images = ImageSerializer(many=True, source='image_set')
     comments = CommentSerializer(many=True, read_only=True, source='comment_set')
     category = CategorySerializer(many=False, read_only=True)
     donations = DonationSerializer(many=True, read_only=True, source='donation_set')
     owner = UserSerializer(many=False, read_only=True)
-
+    total_donations = serializers.SerializerMethodField()
+    
+    def get_total_donations(self, obj):
+        return Donation.objects.aggregate(Sum('amount'))['amount__sum']
     class Meta:
         model = Project
         fields = "__all__"
