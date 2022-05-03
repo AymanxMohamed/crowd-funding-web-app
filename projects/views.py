@@ -12,6 +12,7 @@ def api_projects_list(request):
     projects_serialized = ProjectSerializer(projects, many=True)
     return Response(projects_serialized.data, status=status.HTTP_200_OK)
 
+
 @api_view(['GET'])
 def api_get_project_by_id(request, id):
     project = Project.objects.get(id=id)

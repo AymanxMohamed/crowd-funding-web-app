@@ -48,10 +48,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
     first_name = models.CharField(verbose_name="First Name", max_length=255)
     last_name = models.CharField(max_length=255)
-    phone_number = models.CharField(max_length=255)
-    profile_picture = models.ImageField(upload_to='profile_pictures', blank=True)
+    phone_number = models.CharField(max_length=255, null=True)
+    profile_picture = models.ImageField(upload_to='users/static/images', blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    last_login = models.DateTimeField(auto_now=True, null=True)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
 
