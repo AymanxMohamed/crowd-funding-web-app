@@ -4,6 +4,7 @@ cffi==1.15.0
 colorama==0.4.4
 Django==4.0.4
 django-cors-headers==3.11.0
+django-dotenv==1.4.2
 django-filter==21.1
 django-jazzmin==2.5.0
 django-rest-auth==0.9.5
@@ -18,4 +19,3 @@ pytz==2022.1
 six==1.16.0
 sqlparse==0.4.2
 tzdata==2022.1
-django-dotenv
