@@ -8,7 +8,7 @@ from django.core.mail import send_mail
 
 from django.utils.encoding import force_bytes, force_str, DjangoUnicodeDecodeError
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.http import HttpResponsePermanentRedirect
+from django.http import HttpResponseRedirect
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
 
@@ -17,7 +17,7 @@ from .serializers import UserSerializer
 
 from .utils import token_generator
 
-BASE_FRONT_URL = 'http/localhost:3000'
+BASE_FRONT_URL = 'http://localhost:3000'
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -81,11 +81,9 @@ def mail_activation_link(request, user):
 def activate(request, uidb64, token):
     id = force_str(urlsafe_base64_decode(uidb64))
     user = User.objects.get(pk=id)
-
     if not token_generator.check_token(user, token) or user.is_active:
-        return HttpResponsePermanentRedirect(f'{BASE_FRONT_URL}/auth/login?message="Account Already Activated"')
-
+        print(f'{BASE_FRONT_URL}/auth/login?message="Account Already Activated"')
+        return HttpResponseRedirect(f'{BASE_FRONT_URL}/auth/login?message="Account Already Activated"')
     user.is_active = True
     user.save()
-
-    return HttpResponsePermanentRedirect(f'{BASE_FRONT_URL}/auth/login?message="Account Activated Successfully"')
+    return HttpResponseRedirect(f'{BASE_FRONT_URL}/auth/login?message="Account Activated Successfully"')
