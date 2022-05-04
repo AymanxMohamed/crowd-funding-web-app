@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'tags.apps.TagsConfig',
     'users',
+    'ratings',
+    'reports',
     'categories.apps.CategoriesConfig',
     'projects.apps.ProjectsConfig',
     'comments.apps.CommentsConfig',
