@@ -62,6 +62,9 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
+    @property
+    def get_profile_picture(self):
+        return self.profile_picture.__str__().split("/")[-1]
 
     def has_perm(self, perm, obj=None):
         "Does the user have a specific permission?"
