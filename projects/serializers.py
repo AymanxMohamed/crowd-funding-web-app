@@ -7,7 +7,7 @@ from tags.serializers import TagsSerializer
 from comments.serializers import CommentSerializer
 from categories.serializers import CategorySerializer
 from users.serializers import UserSerializer
-from django.db.models import Sum
+from django.db.models import Sum, Avg
 
 
 class ImageSerializer(serializers.ModelSerializer):
@@ -41,9 +41,13 @@ class DetailedProjectSerializer(serializers.ModelSerializer):
     donations = DonationSerializer(many=True, read_only=True, source='donation_set')
     owner = UserSerializer(many=False, read_only=True)
     total_donations = serializers.SerializerMethodField()
+    average_ratings = serializers.SerializerMethodField()
     
     def get_total_donations(self, obj):
-        return Donation.objects.aggregate(Sum('amount'))['amount__sum']
+        return obj.donation_set.aggregate(Sum('amount'))['amount__sum']
+    
+    def get_average_ratings(self, obj):
+        return obj.rating_set.aggregate(Avg('rating'))['rating__avg']
     class Meta:
         model = Project
         fields = "__all__"
