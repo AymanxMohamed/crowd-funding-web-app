@@ -37,7 +37,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['firstName'] = user.first_name
         token['lastName'] = user.last_name
         token['phoneNumber'] = user.phone_number
-        token['profilePicture'] = user.profile_picture.__str__()
+        token['profilePicture'] = user.profile_picture.__str__().split("/")[-1]
         # ...
 
         return token

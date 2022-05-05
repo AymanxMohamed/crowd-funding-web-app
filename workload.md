@@ -14,7 +14,7 @@
 - Mobile phone [validated against Egyptian phone numbers] ❤️👌 ✅
 - Profile Picture
 
-### Activation Email after registration
+### Activation Email after registration ❤️👌 ✅
 
 - Once the user registers he should receive an email with the
 activation link. The user shouldn’t be able to login without
@@ -25,7 +25,7 @@ activation. The activation link should expire after 24 hours.
 ### Login
 
 - The user should be able to login after activation using his email
-and password.
+and password. ❤️👌 ✅
 - `Bonus`: Allow users to login with facebook account
 
 ### Forgot Password (Bonus)
