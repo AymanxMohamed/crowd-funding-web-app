@@ -10,6 +10,9 @@ from projects.serializers import ProjectSerializer, DetailedProjectSerializer
 def api_projects_list(request):
     projects = Project.objects.all()
     projects_serialized = ProjectSerializer(projects, many=True)
+    if request.query_params.get('featured') == 'true':
+        projects = projects.filter(is_featured=True)
+        projects_serialized = ProjectSerializer(projects, many=True)
     return Response(projects_serialized.data, status=status.HTTP_200_OK)
 
 

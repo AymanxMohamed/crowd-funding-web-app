@@ -24,12 +24,11 @@ class ProjectSerializer(serializers.ModelSerializer):
     total_donations = serializers.SerializerMethodField()
     
     def get_total_donations(self, obj):
-        return Donation.objects.aggregate(Sum('amount'))['amount__sum']
+        return obj.donation_set.aggregate(Sum('amount'))['amount__sum']
 
     class Meta:
         model = Project
         fields = "__all__"
-        include_fields = ('images', 'donations')
 
 
 class DetailedProjectSerializer(serializers.ModelSerializer):
