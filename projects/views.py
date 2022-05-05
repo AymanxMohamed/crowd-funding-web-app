@@ -1,6 +1,7 @@
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from projects.helpers import validate_image_extension
 
 from projects.models import Project , Image
 from projects.serializers import ProjectSerializer, DetailedProjectSerializer
@@ -11,7 +12,7 @@ def api_projects_list(request):
     projects = Project.objects.all()
     projects_serialized = ProjectSerializer(projects, many=True)
     if request.query_params.get('featured') == 'true':
-        projects = projects.filter(is_featured=True)
+        projects = projects.filter(is_featured=True)[:5]
         projects_serialized = ProjectSerializer(projects, many=True)
     return Response(projects_serialized.data, status=status.HTTP_200_OK)
 
@@ -48,10 +49,12 @@ def api_delete_project(request, id):
     project.delete()
     return Response('Project deleted', status=status.HTTP_200_OK)
 
-###############################################################################
 
+
+###############################################################################
 @api_view(['POST'])
 def project_images(request, id):
     for image in request.FILES.getlist('images'):
+        validate_image_extension(image)
         Image.objects.create(project_id=id, image=image)
     return Response('Added images to project', status=status.HTTP_200_OK)

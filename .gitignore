@@ -139,3 +139,5 @@ GitHub.sublime-settings
 
 # static files
 users/static/*
+
+.vscode/*
