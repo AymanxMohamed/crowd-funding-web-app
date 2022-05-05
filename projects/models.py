@@ -23,7 +23,7 @@ class Project(models.Model):
 class Image(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     caption = models.CharField(max_length=255, blank=True)
-    image = models.ImageField(upload_to='projects/static/images/', default='projects/static/images/default.jpg')
+    image = models.FileField(upload_to='projects/static/images/', default='projects/static/images/default.jpg', blank=True, null=True)
 
     def __str__(self):
         return self.image.url

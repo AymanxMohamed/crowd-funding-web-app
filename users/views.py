@@ -89,3 +89,14 @@ def activate(request, uidb64, token):
     user.save()
     return HttpResponseRedirect(f'{BASE_FRONT_URL}/auth/login?message="Account Activated Successfully"',
                                 status=status.HTTP_307_TEMPORARY_REDIRECT)
+
+@api_view(['PUT'])
+def update_user(request, pk):
+    user = User.objects.get(pk=pk)
+    user_serializer = UserSerializer(user, data=request.data)
+    if user_serializer.is_valid():
+        user_serializer.save()
+        return Response(user_serializer.data, status=status.HTTP_200_OK)
+    return Response(user_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+

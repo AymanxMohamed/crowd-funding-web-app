@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from projects.models import Project
+from projects.models import Project , Image
 from projects.serializers import ProjectSerializer, DetailedProjectSerializer
 
 
@@ -25,6 +25,7 @@ def api_create_project(request):
     project_serializer = ProjectSerializer(data=request.data)
     if project_serializer.is_valid():
         project_serializer.save()
+        # Image.objects.create(project_id=project_serializer.data['id'], image=request.data['images'])
         return Response(project_serializer.data, status=status.HTTP_201_CREATED)
     return Response(project_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -43,3 +44,11 @@ def api_delete_project(request, id):
     project = Project.objects.get(id=id)
     project.delete()
     return Response('Project deleted', status=status.HTTP_200_OK)
+
+###############################################################################
+
+@api_view(['POST'])
+def project_images(request, id):
+    for image in request.FILES.getlist('images'):
+        Image.objects.create(project_id=id, image=image)
+    return Response('Added images to project', status=status.HTTP_200_OK)
