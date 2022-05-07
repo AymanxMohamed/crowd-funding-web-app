@@ -87,16 +87,9 @@ def activate(request, uidb64, token):
                                 status=status.HTTP_307_TEMPORARY_REDIRECT)
 
 
-<<<<<<< HEAD
 @api_view(['PATCH'])
 def update_user(request):
     user_serializer = UserSerializer(request.user, data=request.data, partial=True)
-=======
-@api_view(['PUT'])
-def update_user(request, pk):
-    user = User.objects.get(pk=pk)
-    user_serializer = UserSerializer(user, data=request.data)
->>>>>>> 5eb06f3b30c32f29406d8332881c46ef9f1bc3a0
     if user_serializer.is_valid():
         user_serializer.save()
         return Response(User.objects.first().get_tokens(), status=status.HTTP_200_OK)
