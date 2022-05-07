@@ -7,4 +7,6 @@ urlpatterns = [
     path('create', views.api_create_tag, name='api_create_tag'),
     path('<int:id>/update', views.api_update_tag, name='api_update_tag'),
     path('<int:id>/delete', views.api_delete_tag, name='api_delete_tag'),
+    path('<int:id>/projects', views.api_get_related_projects_by_tag, name='api_get_related_projects_by_tag'),
+    
 ]

@@ -5,7 +5,8 @@ from django.shortcuts import get_object_or_404
 
 from tags.models import Tag
 from tags.serializers import TagsSerializer
-
+from projects.models import Project
+from projects.serializers import ProjectSerializer
 
 @api_view(['GET'])
 def api_tags_list(request):
@@ -18,6 +19,13 @@ def api_get_tag_by_id(request, id):
     tag = get_object_or_404(Tag, id=id)
     serialized_tag = TagsSerializer(tag)
     return Response(serialized_tag.data, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def api_get_related_projects_by_tag(request, id):
+    projects = Project.objects.filter(tags__id=id)
+    serialized_projects = ProjectSerializer(projects, many=True)
+    return Response(serialized_projects.data, status=status.HTTP_200_OK)
+    
 
 @api_view(['POST'])
 def api_create_tag(request):
