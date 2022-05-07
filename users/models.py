@@ -3,8 +3,8 @@ from django.db import models
 from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser
 )
-
-
+from rest_framework_simplejwt.tokens import RefreshToken
+from six import text_type
 class UserManager(BaseUserManager):
     def create_user(self, email, first_name, last_name, password=None):
         """
@@ -59,6 +59,16 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name']
+
+    def get_tokens(self):
+        tokens = RefreshToken.for_user(self)
+        refresh = text_type(tokens)
+        access = text_type(tokens.access_token)
+        data = {
+            "refresh": refresh,
+            "access": access
+        }
+        return data
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"

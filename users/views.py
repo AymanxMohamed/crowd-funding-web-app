@@ -11,11 +11,10 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.http import HttpResponseRedirect
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
-
 from .models import User
 from .serializers import UserSerializer
 
-from .utils import token_generator
+from .utils import token_generator,get_tokens_for_user
 
 BASE_FRONT_URL = 'http://localhost:3000'
 
@@ -30,7 +29,6 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)
-
         # Add custom claims
         token['id'] = user.id
         token['email'] = user.email
@@ -53,10 +51,8 @@ def register(request):
     user_serializer = UserSerializer(data=request.data)
     if user_serializer.is_valid():
         user = user_serializer.save()
-        print(user.id)
-        print(user_serializer.data["email"])
         activate_url = mail_activation_link(request, user)
-        email_body = f"Hi {user.first_name} {user.last_name} \n Please Use this link to verify your account \n {activate_url}"
+        email_body = f"Hi {user.first_name} {user.last_name} \n Please Use this link to verify your account \n {activate_url} "
         send_mail(
             subject=email_subject,
             message=email_body,
@@ -90,13 +86,11 @@ def activate(request, uidb64, token):
     return HttpResponseRedirect(f'{BASE_FRONT_URL}/auth/login?message="Account Activated Successfully"',
                                 status=status.HTTP_307_TEMPORARY_REDIRECT)
 
-@api_view(['PUT'])
-def update_user(request, pk):
-    user = User.objects.get(pk=pk)
-    user_serializer = UserSerializer(user, data=request.data)
+
+@api_view(['PATCH'])
+def update_user(request):
+    user_serializer = UserSerializer(request.user, data=request.data, partial=True)
     if user_serializer.is_valid():
         user_serializer.save()
-        return Response(user_serializer.data, status=status.HTTP_200_OK)
+        return Response(User.objects.first().get_tokens(), status=status.HTTP_200_OK)
     return Response(user_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-

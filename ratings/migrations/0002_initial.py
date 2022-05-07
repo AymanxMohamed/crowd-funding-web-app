@@ -11,19 +11,17 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('comments', '0001_initial'),
-        ('projects', '0001_initial'),
+        ('ratings', '0001_initial'),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='comment',
-            name='owner',
+            model_name='rating',
+            name='user',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
         ),
-        migrations.AddField(
-            model_name='comment',
-            name='project',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='projects.project'),
+        migrations.AlterUniqueTogether(
+            name='rating',
+            unique_together={('user', 'project')},
         ),
     ]

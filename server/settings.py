@@ -29,14 +29,16 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
-INSTALLED_APPS = [
-    'jazzmin',
+DEFAULT_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+]
+
+LOCAL_APPS = [
     'tags.apps.TagsConfig',
     'users',
     'ratings',
@@ -45,28 +47,32 @@ INSTALLED_APPS = [
     'projects.apps.ProjectsConfig',
     'comments.apps.CommentsConfig',
     'donations.apps.DonationsConfig',
+]
 
+THIRD_PARTY_APPS = [
+    'jazzmin',
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
     'rest_framework.authtoken',
     'rest_auth',
-    "corsheaders",
+    'corsheaders',
+    'social_django'
 ]
+
+INSTALLED_APPS = DEFAULT_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-
-    "corsheaders.middleware.CorsMiddleware",
-    "django.middleware.common.CommonMiddleware",
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'social_django.middleware.SocialAuthExceptionMiddleware',
 ]
-
-
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -121,6 +127,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect'
             ],
         },
     },
@@ -187,7 +195,6 @@ CORS_ORIGIN_ALLOW_ALL = True
 
 CORS_ALLOW_CREDENTIALS = True
 
-
 CORS_ALLOW_METHODS = [
     "DELETE",
     "GET",
@@ -214,3 +221,13 @@ EMAIL_PORT = '587'
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
 EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
 EMAIL_USE_TLS = True
+
+# Social Media Authentication
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.facebook.FacebookOAuth2',
+    'social_core.backends.twitter.TwitterOAuth',
+    'social_core.backends.github.GithubOAuth2',
+    'social_core.backends.google.GoogleOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
