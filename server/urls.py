@@ -15,4 +15,5 @@ urlpatterns = [
     path('projects/', include('projects.urls')),
     path('tags/', include('tags.urls')),
     path('users/', include('users.urls')),
+    path('ratings/', include('ratings.urls')),
 ]
