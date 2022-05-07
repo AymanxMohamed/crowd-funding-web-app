@@ -90,6 +90,7 @@ def activate(request, uidb64, token):
     return HttpResponseRedirect(f'{BASE_FRONT_URL}/auth/login?message="Account Activated Successfully"',
                                 status=status.HTTP_307_TEMPORARY_REDIRECT)
 
+
 @api_view(['PUT'])
 def update_user(request, pk):
     user = User.objects.get(pk=pk)
