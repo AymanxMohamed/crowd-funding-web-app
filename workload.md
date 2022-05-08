@@ -45,7 +45,7 @@ while registration (Birthdate, facebook profile, country)
 confirmation message before deleting)
 - `Bonus`: User must enter his password to delete his account
 
-2 - Projects: `[amr]`
+## Projects: `[amr]`
 
 - The user can create a project fund raise campaign which contains:
 - Title
