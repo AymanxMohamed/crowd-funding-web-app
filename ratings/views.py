@@ -15,9 +15,7 @@ def api_ratings_list(request):
 
 @api_view(['POST'])
 def api_create_rating(request):
-    print("##############BUG##HERE###############################", request.data)
     serialized_rating = RatingSerializer(data=request.data)
-    print("##############BUG##HERE###############################", serialized_rating)
     if serialized_rating.is_valid():
         serialized_rating.save()
         return Response(serialized_rating.data, status=status.HTTP_201_CREATED)
