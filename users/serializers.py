@@ -6,11 +6,6 @@ from django.contrib.auth.hashers import make_password
 
 
 class UserSerializer(serializers.ModelSerializer):
-    picture = serializers.SerializerMethodField()
-
-
-    def get_picture(self,obj):
-        return obj.profile_picture.__str__().split("/")[-1]
 
     def create(self, validated_data):
         user = User.objects.create(**validated_data)
@@ -19,15 +14,25 @@ class UserSerializer(serializers.ModelSerializer):
         user.save()
         return user
 
-    def update(self, instance, validated_data):
+    def update(self, user, validated_data):
         raise_errors_on_nested_writes('update', self, validated_data)
 
         for attr, value in validated_data.items():
-            setattr(instance, attr, value)
-        instance.save()
+            setattr(user, attr, value)
+        if 'password' in validated_data:
+            user.password = make_password(validated_data['password'])
 
-        return instance
+        user.save()
+
+        return user
 
     class Meta:
         model = User
-        fields = ('id',  'first_name', 'last_name', 'email', 'phone_number', 'picture')
+        fields = ('id', 'first_name', 'last_name', 'email', 'phone_number', 'password', 'profile_picture')
+        extra_kwargs = {'password': {'write_only': True, 'min_length': 4}}
+
+
+class LoginSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('email', 'password')

@@ -12,9 +12,10 @@ from django.http import HttpResponseRedirect
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
 from .models import User
-from .serializers import UserSerializer
+from .serializers import UserSerializer,LoginSerializer
 
 from .utils import token_generator,get_tokens_for_user
+from django.contrib.auth import authenticate
 
 BASE_FRONT_URL = 'http://localhost:3000'
 
@@ -62,6 +63,22 @@ def register(request):
         return Response(user_serializer.data, status=status.HTTP_201_CREATED)
     return Response(user_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+@api_view(['POST'])
+def login(request):
+    if 'email' not in request.data:
+        return Response({"message": "Email is missing"}, status=status.HTTP_401_UNAUTHORIZED)
+    if 'password' not in request.data:
+        return Response({"message": "Password is missing"}, status=status.HTTP_401_UNAUTHORIZED)
+
+    user = authenticate(username=request.data['email'], password=request.data['password'])
+    if user is None:
+        return Response({"message": "Wrong Credentials"}, status=status.HTTP_401_UNAUTHORIZED)
+
+    user_data = {
+        "user": UserSerializer(user).data,
+        "tokens": user.get_tokens()
+    }
+    return Response(user_data, status=status.HTTP_201_CREATED)
 
 def mail_activation_link(request, user):
     uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
