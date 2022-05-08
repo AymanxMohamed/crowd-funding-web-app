@@ -5,7 +5,7 @@ from users.models import User
 class Project(models.Model):
     title = models.CharField(max_length=255)
     details = models.TextField()
-    total_target = models.IntegerField(default=0)
+    total_target = models.PositiveIntegerField()
     tags = models.ManyToManyField(to='tags.Tag', related_name='tags', blank=True)
     start_date = models.DateField(auto_now_add=True)
     end_date = models.DateField()

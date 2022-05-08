@@ -3,8 +3,8 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 
 
 class Rating(models.Model):
-    user = models.ForeignKey('users.User', on_delete=models.CASCADE)
-    project = models.ForeignKey('projects.Project', on_delete=models.CASCADE)
+    user = models.ForeignKey('users.User', on_delete=models.CASCADE, null=True)
+    project = models.ForeignKey('projects.Project', on_delete=models.CASCADE, null=True)
     rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)], default=0)
 
     class Meta:
