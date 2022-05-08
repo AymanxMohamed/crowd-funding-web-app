@@ -12,6 +12,8 @@ from django.http import HttpResponseRedirect
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
 from .models import User
+from projects.models import Project
+from projects.serializers import ProjectSerializer
 from .serializers import UserSerializer,LoginSerializer
 
 from .utils import token_generator,get_tokens_for_user
@@ -111,3 +113,10 @@ def update_user(request):
         user_serializer.save()
         return Response(user_serializer.data, status=status.HTTP_200_OK)
     return Response(user_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['get'])
+def user_projects(request, user_id):
+    projects = Project.objects.filter(owner=user_id)
+    projects_serialized = ProjectSerializer(projects, many=True)
+    return Response(projects_serialized.data, status=status.HTTP_200_OK)
