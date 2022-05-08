@@ -8,4 +8,5 @@ urlpatterns = [
     path('<int:id>/update/', views.api_update_project, name='project_update'),
     path('<int:id>/delete/', views.api_delete_project, name='project_delete'),
     path('<int:id>/images/', views.project_images, name='project_images'),
+    path('search/<str:query>', views.api_search_projects, name='project_search'),
 ]

@@ -25,6 +25,12 @@ def api_get_project_by_id(request, id):
     return Response(detailed_serialized_project.data, status=status.HTTP_200_OK)
 
 
+@api_view(['GET'])
+def api_search_projects(request, query):
+    projects = Project.objects.filter(title__icontains=query)
+    serialized_projects = ProjectSerializer(projects, many=True)
+    return Response(serialized_projects.data, status=status.HTTP_200_OK)
+
 @api_view(['POST'])
 def api_create_project(request):
     project_serializer = ProjectSerializer(data=request.data)
