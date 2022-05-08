@@ -36,7 +36,7 @@ def api_create_project(request):
     project_serializer = ProjectSerializer(data=request.data)
     if project_serializer.is_valid():
         project_serializer.save()
-        # Image.objects.create(project_id=project_serializer.data['id'], image=request.data['images'])
+        Image.objects.create(project_id=project_serializer.data['id'], image=request.data['images'])
         return Response(project_serializer.data, status=status.HTTP_201_CREATED)
     return Response(project_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -60,7 +60,7 @@ def api_delete_project(request, id):
 
 
 
-###############################################################################
+
 @api_view(['POST'])
 def project_images(request, id):
     for image in request.FILES.getlist('images'):

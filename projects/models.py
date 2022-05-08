@@ -27,3 +27,6 @@ class Image(models.Model):
 
     def __str__(self):
         return self.image.url
+    @property
+    def image_name(self):
+        return self.image.__str__().split("/")[-1]

@@ -13,7 +13,7 @@ from django.db.models import Sum, Avg
 class ImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Image
-        fields = ['id', 'image']
+        fields = ['id', 'image_name']
         # fields = '__all__'
 
 
