@@ -2,6 +2,8 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.db.models import Sum
+from django.shortcuts import get_object_or_404
+
 
 from projects.helpers import validate_image_extension
 from projects.models import Project , Image
@@ -20,7 +22,7 @@ def api_projects_list(request):
 
 @api_view(['GET'])
 def api_get_project_by_id(request, id):
-    project = Project.objects.get(id=id)
+    project = get_object_or_404(Project, id=id)
     detailed_serialized_project = DetailedProjectSerializer(project)
     return Response(detailed_serialized_project.data, status=status.HTTP_200_OK)
 
@@ -38,7 +40,7 @@ def api_create_project(request):
         project_serializer.save()
         for image in request.FILES.getlist('images'):
             validate_image_extension(image)
-            Image.objects.create(project_id=id, image=image)
+            Image.objects.create(project_id=project_serializer.data['id'], image=image)
         return Response(project_serializer.data, status=status.HTTP_201_CREATED)
     return Response(project_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
