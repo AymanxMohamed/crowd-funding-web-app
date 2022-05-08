@@ -6,9 +6,11 @@ from django.contrib.auth.hashers import make_password
 
 
 class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ('id',  'first_name', 'last_name', 'email', 'phone_number', 'profile_picture')
+    picture = serializers.SerializerMethodField()
+
+
+    def get_picture(self,obj):
+        return obj.profile_picture.__str__().split("/")[-1]
 
     def create(self, validated_data):
         user = User.objects.create(**validated_data)
@@ -25,3 +27,7 @@ class UserSerializer(serializers.ModelSerializer):
         instance.save()
 
         return instance
+
+    class Meta:
+        model = User
+        fields = ('id',  'first_name', 'last_name', 'email', 'phone_number', 'picture')

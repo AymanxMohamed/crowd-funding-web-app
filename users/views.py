@@ -92,5 +92,5 @@ def update_user(request):
     user_serializer = UserSerializer(request.user, data=request.data, partial=True)
     if user_serializer.is_valid():
         user_serializer.save()
-        return Response(User.objects.first().get_tokens(), status=status.HTTP_200_OK)
+        return Response(user_serializer.data, status=status.HTTP_200_OK)
     return Response(user_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
