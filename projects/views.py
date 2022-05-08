@@ -36,7 +36,9 @@ def api_create_project(request):
     project_serializer = ProjectSerializer(data=request.data)
     if project_serializer.is_valid():
         project_serializer.save()
-        Image.objects.create(project_id=project_serializer.data['id'], image=request.data['images'])
+        for image in request.FILES.getlist('images'):
+            validate_image_extension(image)
+            Image.objects.create(project_id=id, image=image)
         return Response(project_serializer.data, status=status.HTTP_201_CREATED)
     return Response(project_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
