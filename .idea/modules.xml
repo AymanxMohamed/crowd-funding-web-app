@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/07 crowd-funding-web-app-server.iml" filepath="$PROJECT_DIR$/.idea/07 crowd-funding-web-app-server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/crowd-funding-web-app.iml" filepath="$PROJECT_DIR$/.idea/crowd-funding-web-app.iml" />
     </modules>
   </component>
 </project>
