@@ -1,14 +1,16 @@
-from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework import status, authentication
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from django.db.models import Sum
 
 from projects.helpers import validate_image_extension
-from projects.models import Project , Image
+from projects.models import Project, Image
 from projects.serializers import ProjectSerializer, DetailedProjectSerializer
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def api_projects_list(request):
     projects = Project.objects.all()
     projects_serialized = ProjectSerializer(projects, many=True)
@@ -19,6 +21,7 @@ def api_projects_list(request):
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def api_get_project_by_id(request, id):
     project = Project.objects.get(id=id)
     detailed_serialized_project = DetailedProjectSerializer(project)
@@ -26,12 +29,15 @@ def api_get_project_by_id(request, id):
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def api_search_projects(request, query):
     projects = Project.objects.filter(title__icontains=query)
     serialized_projects = ProjectSerializer(projects, many=True)
     return Response(serialized_projects.data, status=status.HTTP_200_OK)
 
+
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def api_create_project(request):
     project_serializer = ProjectSerializer(data=request.data)
     if project_serializer.is_valid():
@@ -42,6 +48,7 @@ def api_create_project(request):
 
 
 @api_view(['PUT'])
+@permission_classes([IsAuthenticated])
 def api_update_project(request, id):
     project = Project.objects.get(id=id)
     project_serializer = ProjectSerializer(instance=project, data=request.data)
@@ -50,7 +57,9 @@ def api_update_project(request, id):
         return Response(project_serializer.data, status=status.HTTP_200_OK)
     return Response(project_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 @api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
 def api_delete_project(request, id):
     project = Project.objects.get(id=id)
     if project.donation_set.aggregate(Sum('amount'))['amount__sum'] > project.total_target * 0.25:
@@ -59,9 +68,9 @@ def api_delete_project(request, id):
     return Response('Project deleted', status=status.HTTP_200_OK)
 
 
-
 ###############################################################################
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def project_images(request, id):
     for image in request.FILES.getlist('images'):
         validate_image_extension(image)

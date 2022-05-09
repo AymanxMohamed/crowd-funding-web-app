@@ -81,7 +81,7 @@ users to donate
 projects
 - Search bar that enables users to search projects by title or tag
 Similar Projects to get some inspiration :)
-https://www.gofundme.com https://www.kickstarter.com https://www.crowdfunding.com
+[gofundme](<https://www.gofundme.com>) [kickstarter](<https://www.kickstarter.com>) [crowdfunding](<https://www.crowdfunding.com>)
 Note: Starting to work on bonus points without completing the essential
 features makes no sense
 
