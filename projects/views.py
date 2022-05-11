@@ -12,13 +12,31 @@ from projects.serializers import ProjectSerializer, DetailedProjectSerializer
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def api_projects_list(request):
+def api_all_projects(request):
     projects = Project.objects.all()
     projects_serialized = ProjectSerializer(projects, many=True)
-    if request.query_params.get('featured') == 'true':
-        projects = projects.filter(is_featured=True)[:5]
-        projects_serialized = ProjectSerializer(projects, many=True)
+    return Response(projects_serialized.data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+def api_featured_projects(request):
+    projects = Project.objects.filter(is_featured=True)[:5]
+    projects_serialized = ProjectSerializer(projects, many=True)
+    return Response(projects_serialized.data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+def api_latest_projects(request):
+    projects = Project.objects.order_by('-start_date')[:5]
+    projects_serialized = ProjectSerializer(projects, many=True)
+    return Response(projects_serialized.data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def api_my_projects(request):
+    projects = Project.objects.filter(owner=request.user)
+    projects_serialized = ProjectSerializer(projects, many=True)
     return Response(projects_serialized.data, status=status.HTTP_200_OK)
 
 
@@ -41,7 +59,10 @@ def api_search_projects(request, query):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def api_create_project(request):
-    project_serializer = ProjectSerializer(data=request.data)
+    updated_request = request.POST.copy()
+    updated_request.update({'owner': request.user.id})
+
+    project_serializer = ProjectSerializer(data=updated_request)
     if project_serializer.is_valid():
         project_serializer.save()
         for image in request.FILES.getlist('images'):
@@ -55,7 +76,12 @@ def api_create_project(request):
 @permission_classes([IsAuthenticated])
 def api_update_project(request, id):
     project = Project.objects.get(id=id)
-    project_serializer = ProjectSerializer(instance=project, data=request.data)
+    if project.owner_id != request.user.id:
+        return Response({"message": "Not Authorized"}, status=status.HTTP_401_UNAUTHORIZED)
+    updated_request = request.POST.copy()
+    updated_request.update({'owner': request.user.id})
+
+    project_serializer = ProjectSerializer(instance=project, data=updated_request)
     if project_serializer.is_valid():
         project_serializer.save()
         return Response(project_serializer.data, status=status.HTTP_200_OK)
@@ -66,8 +92,11 @@ def api_update_project(request, id):
 @permission_classes([IsAuthenticated])
 def api_delete_project(request, id):
     project = Project.objects.get(id=id)
+    if project.owner_id != request.user.id:
+        return Response({"message": "Not Authorized"}, status=status.HTTP_401_UNAUTHORIZED)
+
     if project.donation_set.aggregate(Sum('amount'))['amount__sum'] > project.total_target * 0.25:
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        return Response({"message": "Failed to delete, Donations Exceeded 25% of target."},status=status.HTTP_400_BAD_REQUEST)
     project.delete()
     return Response('Project deleted', status=status.HTTP_200_OK)
 

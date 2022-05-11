@@ -23,7 +23,13 @@ class ProjectSerializer(serializers.ModelSerializer):
     donations = DonationSerializer(many=True, read_only=True)
     total_donations = serializers.SerializerMethodField()
     average_ratings = serializers.SerializerMethodField()
-    
+
+    def update(self, instance, validated_data):
+        instance.email = validated_data.get('email', instance.email)
+        instance.content = validated_data.get('content', instance.content)
+        instance.created = validated_data.get('created', instance.created)
+        return instance
+
     def get_total_donations(self, obj):
         return obj.donation_set.aggregate(Sum('amount'))['amount__sum'] or 0
     
