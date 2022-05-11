@@ -224,6 +224,7 @@ EMAIL_USE_TLS = True
 
 # Social Media Authentication
 AUTHENTICATION_BACKENDS = (
+    'users.backends.EmailBackend',
     'social_core.backends.facebook.FacebookOAuth2',
     'social_core.backends.twitter.TwitterOAuth',
     'social_core.backends.github.GithubOAuth2',

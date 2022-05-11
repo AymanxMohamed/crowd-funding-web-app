@@ -13,7 +13,7 @@ from django.db.models import Sum, Avg
 class ImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Image
-        fields = ['id', 'image']
+        fields = ['id', 'image_name']
         # fields = '__all__'
 
 
@@ -22,9 +22,13 @@ class ProjectSerializer(serializers.ModelSerializer):
     images = serializers.StringRelatedField(many=True, read_only=True, source='image_set')
     donations = DonationSerializer(many=True, read_only=True)
     total_donations = serializers.SerializerMethodField()
+    average_ratings = serializers.SerializerMethodField()
     
     def get_total_donations(self, obj):
-        return obj.donation_set.aggregate(Sum('amount'))['amount__sum']
+        return obj.donation_set.aggregate(Sum('amount'))['amount__sum'] or 0
+    
+    def get_average_ratings(self, obj):
+        return obj.rating_set.aggregate(Avg('rating'))['rating__avg'] or 0
 
     class Meta:
         model = Project
@@ -43,10 +47,10 @@ class DetailedProjectSerializer(serializers.ModelSerializer):
     average_ratings = serializers.SerializerMethodField()
     
     def get_total_donations(self, obj):
-        return obj.donation_set.aggregate(Sum('amount'))['amount__sum']
+        return obj.donation_set.aggregate(Sum('amount'))['amount__sum'] or 0
     
     def get_average_ratings(self, obj):
-        return obj.rating_set.aggregate(Avg('rating'))['rating__avg']
+        return obj.rating_set.aggregate(Avg('rating'))['rating__avg'] or 0
     class Meta:
         model = Project
         fields = "__all__"
