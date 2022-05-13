@@ -16,5 +16,6 @@ urlpatterns = [
     path('tags/', include('tags.urls')),
     path('users/', include('users.urls')),
     path('ratings/', include('ratings.urls')),
+    path('reports/', include('reports.urls')),
     path('oauth/', include('social_django.urls', namespace='social')),
 ]
