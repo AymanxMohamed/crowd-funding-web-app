@@ -4,15 +4,19 @@ from .models import Donation
 
 
 class DonationSerializer(serializers.ModelSerializer):
-    author_name = serializers.SerializerMethodField('get_author_name')
-    author_picture = serializers.SerializerMethodField('get_author_picture')
+    donor_name = serializers.SerializerMethodField()
+    project_picture = serializers.SerializerMethodField()
+    project = serializers.SerializerMethodField()
 
     class Meta:
         model = Donation
         fields = "__all__"
 
-    def get_author_name(self, comment):
-        return comment.user.first_name + " " + comment.user.last_name
+    def get_project_picture(self, comment):
+        return comment.project.image_set.first().image.__str__()
 
-    def get_author_picture(self, comment):
-        return comment.user.profile_picture.__str__() or None
+    def get_project(self, comment):
+        return comment.project.title
+
+    def get_donor_name(self, comment):
+        return comment.user.first_name + " " + comment.user.last_name
