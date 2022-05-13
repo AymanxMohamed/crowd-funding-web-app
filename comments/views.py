@@ -27,7 +27,10 @@ def api_get_comment_by_id(request, id):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def api_create_comment(request):
-    serialized_comment = CommentSerializer(data=request.data)
+    updated_request = request.POST.copy()
+    updated_request.update({'owner': request.user.id})
+
+    serialized_comment = CommentSerializer(data=updated_request)
     if serialized_comment.is_valid():
         serialized_comment.save()
         return Response(serialized_comment.data, status=status.HTTP_201_CREATED)

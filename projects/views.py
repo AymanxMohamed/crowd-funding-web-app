@@ -41,7 +41,6 @@ def api_my_projects(request):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
 def api_get_project_by_id(request, id):
     project = get_object_or_404(Project, id=id)
     detailed_serialized_project = DetailedProjectSerializer(project)
@@ -49,7 +48,6 @@ def api_get_project_by_id(request, id):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
 def api_search_projects(request, query):
     projects = Project.objects.filter(title__icontains=query)
     serialized_projects = ProjectSerializer(projects, many=True)
