@@ -1,21 +1,32 @@
 from rest_framework import serializers
 
-from reports.models import Report
+from reports.models import ProjectReport, CommentReport
 
 
 class ReportSerializer(serializers.ModelSerializer):
-    owner = serializers.SerializerMethodField('get_owner')
-    related_project = serializers.SerializerMethodField('get_related_project')
-    
-    def get_owner(self, report):
+    owner_name = serializers.SerializerMethodField('get_owner_name')
+
+    def get_owner_name(self, report):
         return report.owner.first_name + " " + report.owner.last_name
-    
-    def get_related_project(self, report):
-        return report.related_project.title
-    
-    
+
+
+class CommentReportSerializer(ReportSerializer):
+    related_comment_title = serializers.SerializerMethodField('get_related_comment_title')
+
+    def get_related_comment_title(self, report):
+        return report.related_comment.title
+
     class Meta:
-        model = Report
+        model = CommentReport
         fields = "__all__"
-        
-        
+
+
+class ProjectReportSerializer(ReportSerializer):
+    related_project_title = serializers.SerializerMethodField('get_related_project_title')
+
+    def get_related_project_title(self, report):
+        return report.related_project.title
+
+    class Meta:
+        model = ProjectReport
+        fields = "__all__"

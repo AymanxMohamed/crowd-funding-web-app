@@ -4,32 +4,71 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 
-from reports.models import Report
-from reports.serializers import ReportSerializer
+from reports.models import CommentReport, ProjectReport
+from reports.serializers import CommentReportSerializer, ProjectReportSerializer
+
+""" Comment Reports """
+
 
 @api_view(['GET'])
-def api_reports_list(request):
-    reports = Report.objects.all()
-    serializer_reports = ReportSerializer(reports, many=True)
+def api_comment_reports(request):
+    reports = CommentReport.objects.all()
+    serializer_reports = CommentReportSerializer(reports, many=True)
     return Response(serializer_reports.data, status=status.HTTP_200_OK)
 
+
 @api_view(['GET'])
-def api_get_report_by_id(request, pk):
-    report = get_object_or_404(Report, id=pk)
-    serialized_report = ReportSerializer(report)
+def api_get_comment_report_by_id(request, pk):
+    report = get_object_or_404(CommentReport, id=pk)
+    serialized_report = CommentReportSerializer(report)
     return Response(serialized_report.data, status=status.HTTP_200_OK)
 
+
 @api_view(['POST'])
-def api_create_report(request):
-    serialized_report = ReportSerializer(data=request.data)
+def api_create_comment_report(request):
+    serialized_report = CommentReportSerializer(data=request.data)
     if serialized_report.is_valid():
         serialized_report.save()
         return Response(serialized_report.data, status=status.HTTP_201_CREATED)
     return Response(serialized_report.errors, status=status.HTTP_400_BAD_REQUEST)
     
     
-@api_view(['delete'])
-def api_delete_report(request, pk):
-    report = get_object_or_404(Report, id=pk)
+@api_view(['DELETE'])
+def api_delete_comment_report(request, pk):
+    report = get_object_or_404(CommentReport, id=pk)
     report.delete()
     return Response('Report deleted', status=status.HTTP_200_OK)
+
+
+""" Project Reports """
+
+
+@api_view(['GET'])
+def api_project_reports(request):
+    reports = ProjectReport.objects.all()
+    serializer_reports = ProjectReportSerializer(reports, many=True)
+    return Response(serializer_reports.data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+def api_get_project_report_by_id(request, pk):
+    report = get_object_or_404(ProjectReport, id=pk)
+    serialized_report = ProjectReportSerializer(report)
+    return Response(serialized_report.data, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+def api_create_project_report(request):
+    serialized_report = ProjectReportSerializer(data=request.data)
+    if serialized_report.is_valid():
+        serialized_report.save()
+        return Response(serialized_report.data, status=status.HTTP_201_CREATED)
+    return Response(serialized_report.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['DELETE'])
+def api_delete_project_report(request, pk):
+    report = get_object_or_404(ProjectReport, id=pk)
+    report.delete()
+    return Response('Report deleted', status=status.HTTP_200_OK)
+

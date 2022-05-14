@@ -1,11 +1,16 @@
 from django.urls import path
 from reports import views
 
-
 urlpatterns = [
-    path('', views.api_reports_list, name='report_list'),
-    path('create/', views.api_create_report, name='create_report'),
-    path('<int:pk>/', views.api_get_report_by_id, name='get_report_by_id'),
-    path('<int:pk>/delete/', views.api_delete_report, name='delete_report'),
+    path('comments', views.api_comment_reports, name='comment_reports'),
+    path('comments/<int:pk>/', views.api_get_comment_report_by_id, name='get_comment_report_by_id'),
+    path('comments/create/', views.api_create_comment_report, name='create_comment_report'),
+    path('comments/<int:pk>/', views.api_delete_comment_report, name='delete_comment_report'),
+
+    path('projects', views.api_project_reports, name='project_reports'),
+    path('projects/<int:pk>/', views.api_get_project_report_by_id, name='get_project_report_by_id'),
+    path('projects/create/', views.api_create_project_report, name='create_project_report'),
+    path('projects/<int:pk>', views.api_delete_project_report, name='delete_project_report'),
 ]
+
 
