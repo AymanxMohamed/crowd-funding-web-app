@@ -27,7 +27,10 @@ def api_get_donation_by_id(request, id):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def api_create_donation(request):
-    serialized_donation = DonationSerializer(data=request.data)
+    updated_request = request.data.copy()
+    updated_request.update({'user': request.user.id})
+
+    serialized_donation = DonationSerializer(data=updated_request)
     if serialized_donation.is_valid():
         serialized_donation.save()
         return Response(serialized_donation.data, status=status.HTTP_201_CREATED)
