@@ -5,8 +5,11 @@
 __pycache__
 db.sqlite3
 media
-
-# Backup files # 
+projects\static\*
+!projects\static\images\default.jpg
+users\static\*
+!users\static\images\user.jpg
+# Backup files #
 *.bak 
 .idea/
 .idea/*

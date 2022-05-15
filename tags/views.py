@@ -61,3 +61,11 @@ def api_delete_tag(request, id):
     tag = get_object_or_404(Tag, id=id)
     tag.delete()
     return Response('Tag deleted', status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def api_get_related_projects_by_tag(request, id):
+    projects = Project.objects.filter(tags__id=id)
+    serialized_projects = ProjectSerializer(projects, many=True)
+    return Response(serialized_projects.data, status=status.HTTP_200_OK)

@@ -29,6 +29,7 @@ def api_get_donation_by_id(request, id):
 def api_create_donation(request):
     updated_request = request.data.copy()
     updated_request.update({'user': request.user.id})
+
     serialized_donation = DonationSerializer(data=updated_request)
     if serialized_donation.is_valid():
         serialized_donation.save()

@@ -1,6 +1,7 @@
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -120,3 +121,8 @@ def user_projects(request, user_id):
     projects = Project.objects.filter(owner=user_id)
     projects_serialized = ProjectSerializer(projects, many=True)
     return Response(projects_serialized.data, status=status.HTTP_200_OK)
+
+@api_view(['delete'])
+@permission_classes([IsAuthenticated])
+def delete_user(request):
+    request.user.delete()
