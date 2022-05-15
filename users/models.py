@@ -54,6 +54,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     last_login = models.DateTimeField(auto_now=True, null=True)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
+    birth_date = models.DateField(default=None, null=True)
+    facebook_link = models.TextField(default=None, null=True)
+    country = models.TextField(default=None, null=True)
 
     objects = UserManager()
 

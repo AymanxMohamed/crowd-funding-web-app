@@ -11,13 +11,15 @@ from reports.serializers import CommentReportSerializer, ProjectReportSerializer
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def api_comment_reports(request):
-    reports = CommentReport.objects.all()
+    reports = CommentReport.objects.filter(owner=request.user)
     serializer_reports = CommentReportSerializer(reports, many=True)
     return Response(serializer_reports.data, status=status.HTTP_200_OK)
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def api_get_comment_report_by_id(request, pk):
     report = get_object_or_404(CommentReport, id=pk)
     serialized_report = CommentReportSerializer(report)
@@ -25,8 +27,11 @@ def api_get_comment_report_by_id(request, pk):
 
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def api_create_comment_report(request):
-    serialized_report = CommentReportSerializer(data=request.data)
+    updated_request = request.data.copy()
+    updated_request.update({'owner': request.user.id})
+    serialized_report = CommentReportSerializer(data=updated_request)
     if serialized_report.is_valid():
         serialized_report.save()
         return Response(serialized_report.data, status=status.HTTP_201_CREATED)
@@ -34,6 +39,7 @@ def api_create_comment_report(request):
     
     
 @api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
 def api_delete_comment_report(request, pk):
     report = get_object_or_404(CommentReport, id=pk)
     report.delete()
@@ -44,6 +50,7 @@ def api_delete_comment_report(request, pk):
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def api_project_reports(request):
     reports = ProjectReport.objects.all()
     serializer_reports = ProjectReportSerializer(reports, many=True)
@@ -51,6 +58,7 @@ def api_project_reports(request):
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def api_get_project_report_by_id(request, pk):
     report = get_object_or_404(ProjectReport, id=pk)
     serialized_report = ProjectReportSerializer(report)
@@ -58,8 +66,12 @@ def api_get_project_report_by_id(request, pk):
 
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def api_create_project_report(request):
-    serialized_report = ProjectReportSerializer(data=request.data)
+    updated_request = request.data.copy()
+    updated_request.update({'owner': request.user.id})
+
+    serialized_report = ProjectReportSerializer(data=updated_request)
     if serialized_report.is_valid():
         serialized_report.save()
         return Response(serialized_report.data, status=status.HTTP_201_CREATED)
@@ -67,6 +79,7 @@ def api_create_project_report(request):
 
 
 @api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
 def api_delete_project_report(request, pk):
     report = get_object_or_404(ProjectReport, id=pk)
     report.delete()

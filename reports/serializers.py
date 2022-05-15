@@ -11,10 +11,6 @@ class ReportSerializer(serializers.ModelSerializer):
 
 
 class CommentReportSerializer(ReportSerializer):
-    related_comment_title = serializers.SerializerMethodField('get_related_comment_title')
-
-    def get_related_comment_title(self, report):
-        return report.related_comment.title
 
     class Meta:
         model = CommentReport
