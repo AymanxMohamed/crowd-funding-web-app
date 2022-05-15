@@ -8,7 +8,7 @@ media
 projects\static\*
 !projects\static\images\default.jpg
 users\static\*
-!users\static\images\user.jpg
+!users\static\images\user.png
 # Backup files #
 *.bak 
 .idea/

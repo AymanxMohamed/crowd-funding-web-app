@@ -122,7 +122,10 @@ def user_projects(request, user_id):
     projects_serialized = ProjectSerializer(projects, many=True)
     return Response(projects_serialized.data, status=status.HTTP_200_OK)
 
-@api_view(['delete'])
+@api_view(['post'])
 @permission_classes([IsAuthenticated])
 def delete_user(request):
+    if 'password' not in request.data or not request.user.check_password(request.data['password']):
+        return Response({"message": "Your Password is not correct"}, status=status.HTTP_401_UNAUTHORIZED)
     request.user.delete()
+    return Response({"message": "Your Account has been deleted.. we will miss you😢"}, status=status.HTTP_200_OK)
