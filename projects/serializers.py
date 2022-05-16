@@ -23,6 +23,10 @@ class ProjectSerializer(serializers.ModelSerializer):
     donations = DonationSerializer(many=True, read_only=True)
     total_donations = serializers.SerializerMethodField()
     average_ratings = serializers.SerializerMethodField()
+    category_name = serializers.SerializerMethodField()
+
+    def get_category_name(self, obj):
+        return obj.category.name
 
     def update(self, instance, validated_data):
         instance.email = validated_data.get('email', instance.email)
@@ -51,10 +55,14 @@ class DetailedProjectSerializer(serializers.ModelSerializer):
     owner = UserSerializer(many=False, read_only=True)
     total_donations = serializers.SerializerMethodField()
     average_ratings = serializers.SerializerMethodField()
-    
+    category_name = serializers.SerializerMethodField()
+
+    def get_category_name(self, obj):
+        return obj.category.name
+
     def get_total_donations(self, obj):
         return obj.donation_set.aggregate(Sum('amount'))['amount__sum'] or 0
-    
+
     def get_average_ratings(self, obj):
         return obj.rating_set.aggregate(Avg('rating'))['rating__avg'] or 0
     class Meta:

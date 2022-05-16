@@ -9,7 +9,6 @@ from rest_framework import status
 
 
 class CategoryList(APIView):
-    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         categories = Category.objects.all()

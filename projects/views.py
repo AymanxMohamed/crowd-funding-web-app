@@ -31,6 +31,12 @@ def api_latest_projects(request):
     projects_serialized = ProjectSerializer(projects, many=True)
     return Response(projects_serialized.data, status=status.HTTP_200_OK)
 
+@api_view(['GET'])
+def api_projects_by_category(request,id):
+    projects = Project.objects.filter(category_id=id)
+    projects_serialized = ProjectSerializer(projects, many=True)
+    return Response(projects_serialized.data, status=status.HTTP_200_OK)
+
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
