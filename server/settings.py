@@ -56,8 +56,7 @@ THIRD_PARTY_APPS = [
     'rest_framework.authtoken',
     'rest_auth',
     'corsheaders',
-    'social_django',
-    'django_seed'
+    'social_django'
 ]
 
 INSTALLED_APPS = DEFAULT_APPS + THIRD_PARTY_APPS + LOCAL_APPS
