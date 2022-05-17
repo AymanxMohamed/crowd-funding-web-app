@@ -98,8 +98,8 @@ def api_delete_project(request, id):
     project = Project.objects.get(id=id)
     if project.owner_id != request.user.id:
         return Response({"message": "Not Authorized"}, status=status.HTTP_401_UNAUTHORIZED)
-
-    if project.donation_set.aggregate(Sum('amount'))['amount__sum'] > project.total_target * 0.25:
+    total_donations = project.donation_set.aggregate(Sum('amount'))['amount__sum']
+    if total_donations and (total_donations > project.total_target * 0.25):
         return Response({"message": "Failed to delete, Donations Exceeded 25% of target."},status=status.HTTP_400_BAD_REQUEST)
     project.delete()
     return Response('Project deleted', status=status.HTTP_200_OK)
