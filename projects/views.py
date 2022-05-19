@@ -4,6 +4,8 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from django.db.models import Sum
 from django.shortcuts import get_object_or_404
+from django.core.exceptions import ValidationError
+
 
 
 from projects.helpers import validate_image_extension
@@ -70,7 +72,8 @@ def api_create_project(request):
     if project_serializer.is_valid():
         project_serializer.save()
         for image in request.FILES.getlist('images'):
-            validate_image_extension(image)
+            if (validate_image_extension(image)) is False:
+                raise ValidationError('Invalid image extension')
             Image.objects.create(project_id=project_serializer.data['id'], image=image)
         return Response(project_serializer.data, status=status.HTTP_201_CREATED)
     return Response(project_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -110,6 +113,7 @@ def api_delete_project(request, id):
 @permission_classes([IsAuthenticated])
 def project_images(request, id):
     for image in request.FILES.getlist('images'):
-        validate_image_extension(image)
+        if (validate_image_extension(image)) is False:
+            raise ValidationError('Invalid image extension')
         Image.objects.create(project_id=id, image=image)
     return Response('Added images to project', status=status.HTTP_200_OK)
